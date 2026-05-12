@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Welcome {{ request.session.name }} 👋</h2>
+
+<div class="row mt-4">
+
+    <div class="col-md-4">
+        <div class="card p-3 text-center bg-primary text-white">
+            <h3>{{ total_courses }}</h3>
+            <p>Total Courses</p>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card p-3 text-center bg-success text-white">
+            <h3>{{ enrolled_courses }}</h3>
+            <p>Enrolled</p>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card p-3 text-center bg-warning text-dark">
+            <h3>{{ completed_courses }}</h3>
+            <p>Completed</p>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

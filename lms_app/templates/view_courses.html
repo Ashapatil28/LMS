@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Courses</title>
+</head>
+<body>
+
+<h1>Available Courses</h1>
+
+{% for course in courses %}
+
+<div style="border:1px solid #ccc;padding:20px;margin:20px;">
+    <h2>{{ course.title }}</h2>
+    <p>{{ course.description }}</p>
+
+    {% if course.id in enrolled_courses %}
+        <button disabled>Already Enrolled</button>
+    {% else %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Courses</title>
+</head>
+<body>
+
+<h1>Available Courses</h1>
+
+{% for course in courses %}
+
+<div style="border:1px solid #ccc;padding:20px;margin:20px;">
+    <h2>{{ course.title }}</h2>
+    <p>{{ course.description }}</p>
+
+    {% if course.id in enrolled_courses %}
+        <button disabled>Already Enrolled</button>
+    {% else %}

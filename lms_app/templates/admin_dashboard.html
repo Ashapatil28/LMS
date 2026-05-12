@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+.card-box {
+    border-radius: 15px;
+    padding: 20px;
+    color: white;
+    text-align: center;
+}
+.bg-blue   { background: linear-gradient(45deg,#36d1dc,#5b86e5); }
+.bg-green  { background: linear-gradient(45deg,#00b09b,#96c93d); }
+.bg-orange { background: linear-gradient(45deg,#ff9966,#ff5e62); }
+.bg-purple { background: linear-gradient(45deg,#8e2de2,#4a00e0); }
+</style>
+
+<div class="container mt-4">
+
+    <h2 class="text-center mb-4">Admin Dashboard 👑</h2>
+
+    <a href="{% url 'enrollment_requests' %}"
+       class="btn btn-warning mb-3">
+       Enrollment Requests
+    </a>
+
+    <!-- STATS -->
+    {# href links or the existing 'all_courses' URL to prevent NoReverseMatch crashes. #}
+    <div class="row text-center">
+
+        <div class="col-md-3 mb-4">
+            <div class="card card-box bg-blue">
+                <h1>{{ total_users }}</h1>
+                <h4>Total Users</h4>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card card-box bg-green">
+                <h1>{{ total_students }}</h1>
+                <h4>Students</h4>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card card-box bg-orange">
+                <h1>{{ total_trainers }}</h1>
+                <h4>Trainers</h4>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <a href="{% url 'all_courses' %}" style="text-decoration:none; color:white;">
+                <div class="card card-box bg-purple">
+                    <h1>{{ total_courses }}</h1>
+                    <h4>Courses</h4>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card card-box bg-blue">
+                <h1>{{ total_videos }}</h1>
+                <h4>Total Videos</h4>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card card-box bg-green">
+                <h1>{{ total_enrollments }}</h1>
+                <h4>Enrollments</h4>
+            </div>
+        </div>
+
+    </div>
+
+    <hr>
+
+    <!-- USERS TABLE -->
+    <h4>👥 Recent Users</h4>
+    <table class="table table-bordered">
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.role }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <!-- COURSES TABLE -->
+    <h4>📚 Courses</h4>
+
+    {% for course in courses %}
+    <div class="card p-3 mb-3">
+        <h5>{{ course.title }} ({{ course.videos.count }} videos)</h5>
+        <p>Trainer: {{ course.trainer.name }}</p>
+
+        <!-- LOOP VIDEOS -->
+        {% for video in course.videos.all %}
+
+        <div class="mb-4">
+
+            <h5>{{ video.title }}</h5>
+
+                <div class="ratio ratio-3x2">
+                    <div class="video-overlay">
+                        <a href="{{ video.video_url }}"
+                            target="_blank"
+                            class="btn btn-green btn-sm mt-2">
+                            
+                        </a>
+                    </div>
+                </div>
+
+            <!-- WATCH BUTTON -->
+
+            <a href="{{ video.video_url }}"
+                target="_blank"
+                class="btn btn-danger btn-sm">
+
+                ▶ Watch Video
+
+            </a>
+        
+        </div>
+
+        {% empty %}
+            <p>No videos available</p>
+        {% endfor %}
+    </div>
+    {% endfor %}
+
+    <div class="text-center mt-4">
+        <a href="/admin/" class="btn btn-dark">🔐 Django Admin</a>
+        <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+    </div>
+
+</div>
+
+{% endblock %}

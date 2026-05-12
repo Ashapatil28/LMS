@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ course.title }}</title>
+</head>
+<body>
+
+<h1>{{ course.title }}</h1>
+
+<p>{{ course.description }}</p>
+
+{% if course.video %}
+<video width="700" controls>
+    <source src="{{ course.video.url }}" type="video/mp4">
+</video>
+{% endif %}
+
+<br><br>
+
+<a href="{% url 'complete_course' course.id %}">
+    <button>Complete Course</button>
+</a>
+
+</body>
+</html>

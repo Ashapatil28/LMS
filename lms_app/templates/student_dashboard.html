@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+.sidebar {
+    height: 100vh;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #111;
+    padding-top: 20px;
+}
+.sidebar a {
+    padding: 15px;
+    text-decoration: none;
+    color: white;
+    display: block;
+}
+.sidebar a:hover {
+    background: #575757;
+}
+.main {
+    margin-left: 260px;
+    padding: 20px;
+}
+.card {
+    margin-bottom: 15px;
+}
+</style>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h3 style="color:white; text-align:center;">Student 🎓</h3>
+    <a href="{% url 'student_dashboard' %}">📊 Dashboard</a>
+    <a href="{% url 'courses' %}">📚 View Courses</a>
+    <a href="{% url 'my_courses' %}">📖 My Courses</a>
+    <a href="{% url 'certificate_list' %}">🎓 Certificates</a>
+    <a href="{% url 'logout' %}">🚪 Logout</a>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+    <h2>Welcome, {{ user_name }}  👋</h2>
+
+    <!-- DASHBOARD CARDS -->
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="card p-3 bg-primary text-white">
+                <h4>My Courses</h4>
+                <h2>{{ my_courses_count }}</h2>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card p-3 bg-success text-white">
+                <h4>Completed</h4>
+                <h2>{{ completed_courses }}</h2>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card p-3 bg-warning text-white">
+                <h4>Certificates</h4>
+                <h2>{{ certificates_count }}</h2>
+            </div>
+        </div>
+
+    </div>
+
+    <hr>
+
+    <!-- MY COURSES LIST -->
+    <h3>📖 My Courses</h3>
+
+    {% for item in data %}
+
+        <div class="card p-3">
+
+            <h5>{{ item.course.title }}</h5>
+
+            <p>Progress: {{ item.progress }}%</p>
+
+            <div class="progress">
+                <div class="progress-bar
+                {% if item.progress < 30 %}bg-danger
+                {% elif item.progress < 70 %}bg-warning
+                {% else %}bg-success
+                {% endif %}"
+                style="width: {{ item.progress }}%;">
+                    {{ item.progress }}%
+                </div>
+            </div>
+
+            <br>
+
+            <a href="{% url 'course_detail' item.course.id %}" class="btn btn-primary">
+                ▶ Continue Learning
+            </a>
+
+            {% if item.progress == 100 %}
+                <a href="{% url 'generate_certificate' item.course.id %}" class="btn btn-success mt-2">
+                    🎓 Download Certificate
+                </a>
+            {% else %}
+                <button class="btn btn-secondary mt-2" disabled>
+                    🔒 Complete 100% to unlock certificate
+                </button>
+            {% endif %}
+
+        </div>
+
+    {% empty %}
+
+        <p>No courses enrolled yet. <a href="{% url 'courses' %}">Browse courses</a>.</p>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

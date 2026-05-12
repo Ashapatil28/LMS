@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="card shadow-lg border-0">
+
+        <div class="card-header bg-dark text-white">
+
+            <h3 class="mb-0">
+                Enrollment Requests
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover align-middle">
+
+                    <thead class="table-dark text-center">
+
+                        <tr>
+
+                            <th>#</th>
+                            <th>Student</th>
+                            <th>Course</th>
+                            <th>Trainer</th>
+                            <th>Status</th>
+                            <th width="220">Action</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for req in requests %}
+
+                        <tr>
+
+                            <td class="text-center">
+                                {{ forloop.counter }}
+                            </td>
+
+                            <td>
+                                {{ req.student.name }}
+                            </td>
+
+                            <td>
+                                {{ req.course.title }}
+                            </td>
+
+                            <td>
+                                {{ req.course.trainer.name }}
+                            </td>
+
+                            <td class="text-center">
+
+                                {% if req.status == "pending" %}
+
+                                    <span class="badge bg-warning text-dark p-2">
+                                        Pending
+                                    </span>
+
+                                {% elif req.status == "approved" %}
+
+                                    <span class="badge bg-success p-2">
+                                        Approved
+                                    </span>
+
+                                {% elif req.status == "rejected" %}
+
+                                    <span class="badge bg-danger p-2">
+                                        Rejected
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td class="text-center">
+
+                                {% if req.status == "pending" %}
+
+                                    <a href="{% url 'approve_enrollment' req.id %}"
+                                       class="btn btn-success btn-sm">
+
+                                        Approve
+
+                                    </a>
+
+                                    <a href="{% url 'reject_enrollment' req.id %}"
+                                       class="btn btn-danger btn-sm">
+
+                                        Reject
+
+                                    </a>
+
+                                {% else %}
+
+                                    <button class="btn btn-secondary btn-sm" disabled>
+                                        Completed
+                                    </button>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="6" class="text-center text-muted">
+
+                                No Enrollment Requests Found
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

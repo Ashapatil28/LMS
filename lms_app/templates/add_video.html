@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow p-4">
+
+                <h3 class="text-center mb-4 text-primary">🎬 Add Video</h3>
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <input type="text" name="title" placeholder="Video Title"
+                           class="form-control mb-3" required>
+
+                    <input type="url" name="video_url" placeholder="YouTube Video URL"
+                           class="form-control mb-3" required>
+
+                    <button type="submit" class="btn btn-success w-100">
+                        Add Video
+                    </button>
+                </form>
+
+                <a href="{% url 'course_detail' course_id %}" class="btn btn-secondary w-100 mt-2">
+                    ← Back to Course
+                </a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

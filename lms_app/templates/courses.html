@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2>Available Courses📚</h2>
+
+    <div class="row">
+
+        {% for course in courses %}
+
+        <div class="col-md-4">
+
+            <div class="card mb-4 shadow">
+
+                <div class="card-body">
+
+                    <h4>{{ course.title }}</h4>
+
+                    <p>{{ course.description }}</p>
+
+                    <a href="{% url 'enroll_course' course.id %}"
+                       class="btn btn-primary">
+                       Enroll
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

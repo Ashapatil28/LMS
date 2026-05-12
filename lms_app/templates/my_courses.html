@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <h2>📖 My Courses</h2>
+
+    {% if enrollments %}
+        {% for enroll in enrollments %}
+            <h5>{{ enroll.course.title }}</h5>
+
+            <a href="{% url 'course_detail' enroll.course.id %}" class="btn btn-info">
+                View Course
+            </a>
+        {% endfor %}
+    {% else %}
+        <p>No enrolled courses</p>
+    {% endif %}
+    
+    {% for course in courses %}
+        <div class="card p-3 mb-3">
+            <h5>{{ course.title }}</h5>
+            <p>{{ course.description|truncatewords:15 }}</p>
+            <a href="{% url 'course_detail' course.id %}" class="btn btn-primary">
+                ▶ Continue Learning
+            </a>
+        </div>
+    {% empty %}
+        <p>You are not enrolled in any courses yet.
+           <a href="{% url 'courses' %}">Browse courses</a>.
+        </p>
+    {% endfor %}
+</div>
+
+{% endblock %}

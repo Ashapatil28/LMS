@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    .main-box {
+        margin-top: 80px;
+    }
+
+    h1 {
+        font-size: 48px;
+        font-weight: bold;
+        color: #0d6efd;
+    }
+
+    .subtitle {
+        color: #555;
+        margin-bottom: 30px;
+    }
+
+    .btn-custom {
+        padding: 10px 25px;
+        font-size: 18px;
+        border-radius: 10px;
+    }
+</style>
+
+<div class="container text-center main-box">
+
+    <h1>Welcome to LMS Project 🎓</h1>
+
+    <p class="subtitle">
+        Admin | Student | Trainer Dashboard
+    </p>
+
+    <div class="mt-4">
+        <a href="/admin/" class="btn btn-dark btn-custom m-2">
+            Admin Panel
+        </a>
+
+        <a href="/register/" class="btn btn-primary btn-custom m-2">
+            Register
+        </a>
+
+        <a href="/login/" class="btn btn-success btn-custom m-2">
+            Login
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}
