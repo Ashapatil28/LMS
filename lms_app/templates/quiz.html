@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="card shadow-lg border-0 rounded-4">
+
+        <!-- Header -->
+        <div class="card-header bg-success text-white text-center py-4 rounded-top-4">
+            <h2>🎓 {{ course.title }} Quiz</h2>
+            <p class="mb-0">Complete the quiz to unlock your certificate</p>
+        </div>
+
+        <div class="card-body p-5">
+
+            {% if error %}
+            <div class="alert alert-danger text-center">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+
+                {% for quiz in quizzes %}
+                <div class="mb-5 p-4 border rounded-4 shadow-sm bg-light">
+
+                    <h5 class="fw-bold mb-4">
+                        Q{{ forloop.counter }}. {{ quiz.question }}
+                    </h5>
+
+                    <div class="form-check mb-3">
+                        <input class="form-check-input"
+                               type="radio"
+                               name="{{ quiz.id }}"
+                               value="{{ quiz.option1 }}">
+                        <label class="form-check-label">
+                            {{ quiz.option1 }}
+                        </label>
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input class="form-check-input"
+                               type="radio"
+                               name="{{ quiz.id }}"
+                               value="{{ quiz.option2 }}">
+                        <label class="form-check-label">
+                            {{ quiz.option2 }}
+                        </label>
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input class="form-check-input"
+                               type="radio"
+                               name="{{ quiz.id }}"
+                               value="{{ quiz.option3 }}">
+                        <label class="form-check-label">
+                            {{ quiz.option3 }}
+                        </label>
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input class="form-check-input"
+                               type="radio"
+                               name="{{ quiz.id }}"
+                               value="{{ quiz.option4 }}">
+                        <label class="form-check-label">
+                            {{ quiz.option4 }}
+                        </label>
+                    </div>
+
+                </div>
+                {% endfor %}
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success btn-lg px-5 rounded-pill">
+                        Submit Quiz ✅
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

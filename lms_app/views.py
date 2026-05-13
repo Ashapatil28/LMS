@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import User, Course, Video, CourseEnrollment, VideoProgress, Attendance
+from .models import User, Course, Video, CourseEnrollment, VideoProgress, Attendance, Quiz
 from reportlab.pdfgen import canvas
 from django.http import HttpResponse, JsonResponse
 from datetime import datetime
@@ -7,6 +7,7 @@ import os
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from reportlab.lib.pagesizes import landscape, A4
+import random
 
 
 # ─── SESSION AUTH DECORATOR ────────────────────────────────────────────────────
@@ -48,6 +49,19 @@ def login_view(request):
     if request.method == "POST":
         email = request.POST['email']
         password = request.POST['password']
+        captcha_answer = request.POST.get('captcha')
+
+        # Check captcha
+        if int(captcha_answer) != request.session.get('captcha_result'):
+            num1 = random.randint(1, 10)
+            num2 = random.randint(1, 10)
+            request.session['captcha_result'] = num1 + num2
+
+            return render(request, "login.html", {
+                "error": "Invalid CAPTCHA",
+                "num1": num1,
+                "num2": num2
+            })
 
         try:
             user = User.objects.get(email=email, password=password)
@@ -66,9 +80,19 @@ def login_view(request):
                 return redirect('student_dashboard')
 
         except User.DoesNotExist:
-            return render(request, "login.html", {"error": "Invalid credentials"})
+            pass
 
-    return render(request, "login.html")
+        return render(request, "login.html", {"error": "Invalid credentials"})
+
+    # Generate captcha for GET request
+    num1 = random.randint(1, 10)
+    num2 = random.randint(1, 10)
+    request.session['captcha_result'] = num1 + num2
+
+    return render(request, "login.html",{
+        "num1":num1,
+        "num2":num2
+    })
 
 
 # ─── LOGOUT ────────────────────────────────────────────────────────────────────
@@ -291,6 +315,36 @@ def enroll_course(request, course_id):
 
     return redirect('courses')
 
+# ─── QUIZ ───────────────────────────────────────────────────────────────
+def take_quiz(request, course_id):
+    course = Course.objects.get(id=course_id)
+    quizzes = Quiz.objects.filter(course=course)
+
+    if request.method == "POST":
+        score = 0
+
+        for q in quizzes:
+            selected = request.POST.get(str(q.id))
+
+            if selected == q.correct_answer:
+                score += 1
+
+        if score >= len(quizzes) * 0.6:
+            request.session['quiz_passed'] = True
+            return render(request, 'quiz_passed.html', {
+                'course': course
+            })
+
+        return render(request, 'quiz.html', {
+            'quizzes': quizzes,
+            'course': course,
+            'error': 'You failed. Try again.'
+        })
+
+    return render(request, 'quiz.html', {
+        'quizzes': quizzes,
+        'course': course
+    })
 
 # ─── CERTIFICATE ───────────────────────────────────────────────────────────────
 @session_login_required
@@ -307,6 +361,9 @@ def generate_certificate(request, course_id):
     if not is_course_completed(user_id, course):
         return HttpResponse("Complete all videos to download certificate.")
 
+    if not request.session.get('quiz_passed'):
+        return redirect('take_quiz', course_id=course_id)
+    
     # Mark certificate generated
     enrollment = CourseEnrollment.objects.filter(
         student_id=user_id,

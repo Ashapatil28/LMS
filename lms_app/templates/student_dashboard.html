@@ -100,13 +100,29 @@
             </a>
 
             {% if item.progress == 100 %}
-                <a href="{% url 'generate_certificate' item.course.id %}" class="btn btn-success mt-2">
-                    🎓 Download Certificate
-                </a>
+
+                {% if request.session.quiz_passed %}
+
+                    <a href="{% url 'generate_certificate' item.course.id %}"
+                        class="btn btn-success mt-2 w-100">
+                            📥 Download Certificate
+                    </a>
+
+                {% else %}
+
+                    <a href="{% url 'take_quiz' item.course.id %}"
+                        class="btn btn-success mt-2 w-100">
+                        🎓 Take Quiz to Download Certificate
+                    </a>
+
+                {% endif %}
+
             {% else %}
-                <button class="btn btn-secondary mt-2" disabled>
-                    🔒 Complete 100% to unlock certificate
-                </button>
+
+                    <button class="btn btn-secondary mt-2 w-100" disabled>
+                        🔒 Complete 100% to unlock certificate
+                    </button>
+
             {% endif %}
 
         </div>

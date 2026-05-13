@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5 text-center">
+
+    <div class="card shadow p-5">
+
+        <h1 class="text-success">🎉 Quiz Passed!</h1>
+
+        <p class="mt-3">
+            Congratulations! You successfully passed the quiz.
+        </p>
+
+        <a href="{% url 'generate_certificate' course.id %}"
+            class="btn btn-success">
+            🎓 Get Certificate
+        </a>
+
+    </div>
+
+</div>
+
+<div class="text-center mt-5">
+
+    <div class="card shadow-lg p-5 rounded-4">
+
+        <h2 class="text-success">Congratulations! 🏆</h2>
+
+        <p>Your Certificate is ready.</p>
+
+    </div>
+
+</div>
+{% endblock %}
