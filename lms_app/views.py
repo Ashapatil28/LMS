@@ -216,37 +216,40 @@ def course_detail(request, course_id):
             ).values_list("video_id", flat=True)
         )
 
-        for i, video in enumerate(videos):
-            if i == 0:
-                unlocked_videos.append(video.id)
-            else:
-                prev_video = videos[i - 1]
-                if prev_video.id in completed_videos:
-                    unlocked_videos.append(video.id)
+        previous_completed = True  # First video unlocked
 
+        for video in videos:
+            if previous_completed:
+                unlocked = True
+            else:
+                unlocked = False
+
+            unlocked_videos.append({
+                'video': video,
+                'unlocked': unlocked
+            })
+
+            previous_completed = video.id in completed_videos
+
+    # Current video
     video_id = request.GET.get("video")
     if video_id:
         current_video = get_object_or_404(Video, id=video_id)
     else:
         current_video = videos[0] if videos else None
 
+    # Progress
     total_videos = len(videos)
-
     completed_count = len(completed_videos)
 
-    if total_videos > 0:
-        progress = int((completed_count / total_videos) * 100)
-    else:
-        progress = 0
-
+    progress = int((completed_count / total_videos) * 100) if total_videos > 0 else 0
     is_completed = (progress == 100)
-    
+
     return render(request, "course_detail.html", {
         "course": course,
-        "videos": videos,
+        "videos": unlocked_videos,  # ✅ send structured data
         "enrolled": enrolled,
         "completed_videos": completed_videos,
-        "unlocked_videos": unlocked_videos,
         "current_video": current_video,
         "progress": progress,
         "is_completed": is_completed,
